@@ -12,7 +12,7 @@ CHAT_ID = os.environ.get("CHAT_ID")
 def send_telegram_message(message):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     try:
-        response = requests.get(url, params={
+        requests.get(url, params={
             "chat_id": CHAT_ID,
             "text": message,
             "parse_mode": "Markdown"
@@ -46,7 +46,6 @@ def save_new_codes(codes):
             f.write(c + "\n")
 
 # === Beautify Message ===
-
 def format_codes_message(codes):
     timestamp = datetime.now().strftime("%b %d, %I:%M %p")
     header = f"🎮 *Genshin Impact New Codes* _(as of {timestamp})_\n\n"
@@ -57,8 +56,12 @@ def format_codes_message(codes):
         else:
             code, rewards = c, ""
         line = f"{idx}️⃣ `{code.strip()}` – {rewards.strip()}"
-        body += line + "\n\n"  # Extra newline for spacing
+        body += line + "\n\n"
     return header + body.strip()
+
+def format_no_codes_message():
+    timestamp = datetime.now().strftime("%b %d, %I:%M %p")
+    return f"📭 No new Genshin codes found as of *{timestamp}*."
 
 # === Main Execution ===
 def main():
@@ -66,21 +69,22 @@ def main():
     codes = fetch_genshin_codes()
     if not codes:
         print("❌ No codes returned.")
+        send_telegram_message("⚠️ API returned no data.")
         return
 
     sent = load_sent_codes()
     new = [c for c in codes if c not in sent]
 
     if new:
-        print("\n🎉 New codes found:")
+        print("🎉 New codes found:")
         for c in new:
             print("✅", c)
         message = format_codes_message(new)
         send_telegram_message(message)
         save_new_codes(new)
     else:
-        print("📭 No new codes — you're all caught up!")
+        print("ℹ️ No new codes — sending status update.")
+        send_telegram_message(format_no_codes_message())
 
-# === Run ===
 if __name__ == "__main__":
     main()

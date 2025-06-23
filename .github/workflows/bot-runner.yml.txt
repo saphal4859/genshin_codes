@@ -1,9 +1,9 @@
-name: Run Genshin Code Bot Every 6 Hours
+name: Run Genshin Code Bot Every 1 Minute
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # every 6 hours
-  workflow_dispatch:       # allows manual trigger too
+    - cron: '* * * * *'  # runs every minute (TEMP for testing)
+  workflow_dispatch:
 
 jobs:
   run-bot:
@@ -25,4 +25,4 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
-        run: python genshin_codes_bot.py
+        run: python genshin_bot.py
