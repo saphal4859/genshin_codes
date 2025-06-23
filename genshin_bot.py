@@ -5,8 +5,8 @@ from datetime import datetime
 # === Configuration ===
 API_URL = "https://hoyo-codes.seria.moe/codes?game=genshin"
 SENT_FILE = "sent_codes.txt"
-BOT_TOKEN = "7991778923:AAE1JMp_i_ku0YF8VkLQXnHtt8rzHwi8ai0"
-CHAT_ID = "491823050"
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
 
 # === Telegram Sender ===
 def send_telegram_message(message):
